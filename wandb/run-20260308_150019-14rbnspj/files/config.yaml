@@ -1,0 +1,63 @@
+_wandb:
+    value:
+        cli_version: 0.25.0
+        e:
+            jaje4mfnpc38dydyx8xxsdw20ps8u3nn:
+                apple:
+                    ecpuCores: 6
+                    gpuCores: 10
+                    memoryGb: 24
+                    name: Apple M4
+                    pcpuCores: 4
+                    ramTotalBytes: "25769803776"
+                    swapTotalBytes: "2147483648"
+                args:
+                    - --csv_path
+                    - ../GalaxyZoo1_DR_table2.csv
+                codePath: src/models/build_model.py
+                codePathLocal: src/models/build_model.py
+                cpu_count: 10
+                cpu_count_logical: 10
+                disk:
+                    /:
+                        total: "494384795648"
+                        used: "407466205184"
+                email: wryo7811@gmail.com
+                executable: /opt/anaconda3/bin/python
+                host: RyonoMacBook-Air.local
+                memory:
+                    total: "25769803776"
+                os: macOS-26.3-arm64-arm-64bit-Mach-O
+                program: /Users/watanabemuku/Downloads/B4/DL_Basics/2025_Autumn/1st_Lecture/Game_Physics/galaxy_portfolio/src/models/build_model.py
+                python: CPython 3.13.5
+                root: /Users/watanabemuku/Downloads/B4/DL_Basics/2025_Autumn/1st_Lecture/Game_Physics/galaxy_portfolio
+                startedAt: "2026-03-08T06:00:19.442937Z"
+                writerId: jaje4mfnpc38dydyx8xxsdw20ps8u3nn
+        m: []
+        python_version: 3.13.5
+        t:
+            "1":
+                - 1
+                - 41
+            "2":
+                - 1
+                - 41
+            "3":
+                - 13
+                - 16
+            "4": 3.13.5
+            "5": 0.25.0
+            "12": 0.25.0
+            "13": darwin-arm64
+architecture:
+    value: ResNet-50
+batch_size:
+    value: 32
+epochs:
+    value: 15
+learning_rate:
+    value: 0.001
+loss_function:
+    value: MSE
+optimizer:
+    value: Adam

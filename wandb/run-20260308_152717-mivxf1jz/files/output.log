@@ -1,0 +1,56 @@
+Using device: mps
+Total labels in CSV: 61578
+Total JPG images found in directory: 61578
+Dataset mapped size: 61578 images.
+Dataset loaded with 61578 samples. Predicting 37 probabilities.
+/opt/anaconda3/lib/python3.13/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/opt/anaconda3/lib/python3.13/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=None`.
+  warnings.warn(msg)
+Starting Training...
+Epoch 1/15 [Train]: 100%|██████████████████████████████| 1540/1540 [26:22<00:00,  1.03s/it]
+Epoch 1/15 [Val]: 100%|██████████████████████████████████| 385/385 [02:02<00:00,  3.14it/s]
+Epoch 1/15 - Train Loss: 0.0195 | Val Loss: 0.0231
+--> Saved new best model with Val Loss: 0.0231
+Epoch 2/15 [Train]: 100%|██████████████████████████████| 1540/1540 [27:50<00:00,  1.08s/it]
+Epoch 2/15 [Val]: 100%|██████████████████████████████████| 385/385 [02:11<00:00,  2.92it/s]
+Epoch 2/15 - Train Loss: 0.0140 | Val Loss: 0.0127
+--> Saved new best model with Val Loss: 0.0127
+Epoch 3/15 [Train]: 100%|██████████████████████████████| 1540/1540 [29:45<00:00,  1.16s/it]
+Epoch 3/15 [Val]: 100%|██████████████████████████████████| 385/385 [02:11<00:00,  2.93it/s]
+Epoch 3/15 - Train Loss: 0.0120 | Val Loss: 0.0181
+Epoch 4/15 [Train]: 100%|██████████████████████████████| 1540/1540 [26:28<00:00,  1.03s/it]
+Epoch 4/15 [Val]: 100%|██████████████████████████████████| 385/385 [01:59<00:00,  3.23it/s]
+Epoch 4/15 - Train Loss: 0.0110 | Val Loss: 0.0123
+--> Saved new best model with Val Loss: 0.0123
+Epoch 5/15 [Train]: 100%|██████████████████████████████| 1540/1540 [23:54<00:00,  1.07it/s]
+Epoch 5/15 [Val]: 100%|██████████████████████████████████| 385/385 [01:57<00:00,  3.28it/s]
+Epoch 5/15 - Train Loss: 0.0104 | Val Loss: 0.0106
+--> Saved new best model with Val Loss: 0.0106
+Epoch 6/15 [Train]: 100%|██████████████████████████████| 1540/1540 [26:16<00:00,  1.02s/it]
+Epoch 6/15 [Val]: 100%|██████████████████████████████████| 385/385 [02:12<00:00,  2.91it/s]
+Epoch 6/15 - Train Loss: 0.0098 | Val Loss: 0.0102
+--> Saved new best model with Val Loss: 0.0102
+Epoch 7/15 [Train]: 100%|██████████████████████████████| 1540/1540 [26:09<00:00,  1.02s/it]
+Epoch 7/15 [Val]: 100%|██████████████████████████████████| 385/385 [02:09<00:00,  2.96it/s]
+Epoch 7/15 - Train Loss: 0.0094 | Val Loss: 0.0099
+--> Saved new best model with Val Loss: 0.0099
+Epoch 8/15 [Train]: 100%|██████████████████████████████| 1540/1540 [25:21<00:00,  1.01it/s]
+Epoch 8/15 [Val]: 100%|██████████████████████████████████| 385/385 [02:02<00:00,  3.15it/s]
+Epoch 8/15 - Train Loss: 0.0091 | Val Loss: 0.0098
+--> Saved new best model with Val Loss: 0.0098
+Epoch 9/15 [Train]: 100%|██████████████████████████████| 1540/1540 [22:50<00:00,  1.12it/s]
+Epoch 9/15 [Val]: 100%|██████████████████████████████████| 385/385 [01:53<00:00,  3.40it/s]
+Epoch 9/15 - Train Loss: 0.0088 | Val Loss: 0.0091
+--> Saved new best model with Val Loss: 0.0091
+Epoch 10/15 [Train]: 100%|█████████████████████████████| 1540/1540 [22:49<00:00,  1.12it/s]
+Epoch 10/15 [Val]: 100%|█████████████████████████████████| 385/385 [01:52<00:00,  3.43it/s]
+Epoch 10/15 - Train Loss: 0.0086 | Val Loss: 0.0108
+Epoch 11/15 [Train]: 100%|█████████████████████████████| 1540/1540 [23:03<00:00,  1.11it/s]
+Epoch 11/15 [Val]: 100%|█████████████████████████████████| 385/385 [01:55<00:00,  3.34it/s]
+Epoch 11/15 - Train Loss: 0.0082 | Val Loss: 0.0096
+Epoch 12/15 [Train]: 100%|█████████████████████████████| 1540/1540 [23:31<00:00,  1.09it/s]
+Epoch 12/15 [Val]: 100%|█████████████████████████████████| 385/385 [01:56<00:00,  3.31it/s]
+Epoch 12/15 - Train Loss: 0.0081 | Val Loss: 0.0108
+Early stopping triggered after 3 epochs with no improvement.
+Training complete. Best model saved to models/baseline_resnet50_best.pth

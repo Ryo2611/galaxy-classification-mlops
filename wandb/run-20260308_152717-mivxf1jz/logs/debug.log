@@ -1,0 +1,21 @@
+2026-03-08 15:27:17,324 INFO    MainThread:32928 [wandb_setup.py:_flush():81] Current SDK version is 0.25.0
+2026-03-08 15:27:17,325 INFO    MainThread:32928 [wandb_setup.py:_flush():81] Configure stats pid to 32928
+2026-03-08 15:27:17,325 INFO    MainThread:32928 [wandb_setup.py:_flush():81] Loading settings from environment variables
+2026-03-08 15:27:17,325 INFO    MainThread:32928 [wandb_init.py:setup_run_log_directory():717] Logging user logs to /Users/watanabemuku/Downloads/B4/DL_Basics/2025_Autumn/1st_Lecture/Game_Physics/galaxy_portfolio/wandb/run-20260308_152717-mivxf1jz/logs/debug.log
+2026-03-08 15:27:17,325 INFO    MainThread:32928 [wandb_init.py:setup_run_log_directory():718] Logging internal logs to /Users/watanabemuku/Downloads/B4/DL_Basics/2025_Autumn/1st_Lecture/Game_Physics/galaxy_portfolio/wandb/run-20260308_152717-mivxf1jz/logs/debug-internal.log
+2026-03-08 15:27:17,325 INFO    MainThread:32928 [wandb_init.py:init():844] calling init triggers
+2026-03-08 15:27:17,325 INFO    MainThread:32928 [wandb_init.py:init():849] wandb.init called with sweep_config: {}
+config: {'architecture': 'ResNet-50', 'epochs': 15, 'batch_size': 32, 'learning_rate': 0.001, 'optimizer': 'Adam', 'loss_function': 'MSE', '_wandb': {}}
+2026-03-08 15:27:17,325 INFO    MainThread:32928 [wandb_init.py:init():892] starting backend
+2026-03-08 15:27:17,584 INFO    MainThread:32928 [wandb_init.py:init():895] sending inform_init request
+2026-03-08 15:27:17,606 INFO    MainThread:32928 [wandb_init.py:init():903] backend started and connected
+2026-03-08 15:27:17,620 INFO    MainThread:32928 [wandb_init.py:init():973] updated telemetry
+2026-03-08 15:27:17,621 INFO    MainThread:32928 [wandb_init.py:init():997] communicating run to backend with 90.0 second timeout
+2026-03-08 15:27:18,341 INFO    MainThread:32928 [wandb_init.py:init():1042] starting run threads in backend
+2026-03-08 15:27:18,497 INFO    MainThread:32928 [wandb_run.py:_console_start():2524] atexit reg
+2026-03-08 15:27:18,497 INFO    MainThread:32928 [wandb_run.py:_redirect():2373] redirect: wrap_raw
+2026-03-08 15:27:18,497 INFO    MainThread:32928 [wandb_run.py:_redirect():2442] Wrapping output streams.
+2026-03-08 15:27:18,497 INFO    MainThread:32928 [wandb_run.py:_redirect():2465] Redirects installed.
+2026-03-08 15:27:18,499 INFO    MainThread:32928 [wandb_init.py:init():1082] run started, returning control to user process
+2026-03-08 20:56:08,807 INFO    wandb-AsyncioManager-main:32928 [service_client.py:_forward_responses():134] Reached EOF.
+2026-03-08 20:56:08,808 INFO    wandb-AsyncioManager-main:32928 [mailbox.py:close():155] Closing mailbox, abandoning 1 handles.

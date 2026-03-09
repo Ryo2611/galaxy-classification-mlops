@@ -1,0 +1,46 @@
+Using device: mps
+Dataset loaded with 10 samples. Predicting 7 probabilities.
+/opt/anaconda3/lib/python3.13/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/opt/anaconda3/lib/python3.13/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet50_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet50_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Starting Training...
+Epoch 1/15 [Train]: 100%|████████████████████████████████████| 1/1 [00:01<00:00,  1.97s/it]
+Epoch 1/15 [Val]: 100%|██████████████████████████████████████| 1/1 [00:00<00:00,  9.62it/s]
+Epoch 1/15 - Train Loss: 0.1462 | Val Loss: 0.1057
+--> Saved new best model with Val Loss: 0.1057
+Epoch 2/15 [Train]: 100%|████████████████████████████████████| 1/1 [00:00<00:00,  3.83it/s]
+Epoch 2/15 [Val]: 100%|██████████████████████████████████████| 1/1 [00:00<00:00, 46.94it/s]
+Epoch 2/15 - Train Loss: 0.0461 | Val Loss: 0.0349
+--> Saved new best model with Val Loss: 0.0349
+Epoch 3/15 [Train]: 100%|████████████████████████████████████| 1/1 [00:00<00:00,  5.11it/s]
+Epoch 3/15 [Val]: 100%|██████████████████████████████████████| 1/1 [00:00<00:00, 53.13it/s]
+Epoch 3/15 - Train Loss: 0.0208 | Val Loss: 0.0094
+--> Saved new best model with Val Loss: 0.0094
+Epoch 4/15 [Train]: 100%|████████████████████████████████████| 1/1 [00:00<00:00,  5.03it/s]
+Epoch 4/15 [Val]: 100%|██████████████████████████████████████| 1/1 [00:00<00:00, 51.01it/s]
+Epoch 4/15 - Train Loss: 0.0153 | Val Loss: 0.0076
+--> Saved new best model with Val Loss: 0.0076
+Epoch 5/15 [Train]: 100%|████████████████████████████████████| 1/1 [00:00<00:00,  5.03it/s]
+Epoch 5/15 [Val]: 100%|██████████████████████████████████████| 1/1 [00:00<00:00, 54.24it/s]
+Epoch 5/15 - Train Loss: 0.0143 | Val Loss: 0.0070
+--> Saved new best model with Val Loss: 0.0070
+Epoch 6/15 [Train]: 100%|████████████████████████████████████| 1/1 [00:00<00:00,  5.05it/s]
+Epoch 6/15 [Val]: 100%|██████████████████████████████████████| 1/1 [00:00<00:00, 53.95it/s]
+Epoch 6/15 - Train Loss: 0.0132 | Val Loss: 0.0069
+--> Saved new best model with Val Loss: 0.0069
+Epoch 7/15 [Train]: 100%|████████████████████████████████████| 1/1 [00:00<00:00,  5.03it/s]
+Epoch 7/15 [Val]: 100%|██████████████████████████████████████| 1/1 [00:00<00:00, 52.51it/s]
+Epoch 7/15 - Train Loss: 0.0139 | Val Loss: 0.0068
+--> Saved new best model with Val Loss: 0.0068
+Epoch 8/15 [Train]: 100%|████████████████████████████████████| 1/1 [00:00<00:00,  5.04it/s]
+Epoch 8/15 [Val]: 100%|██████████████████████████████████████| 1/1 [00:00<00:00, 50.69it/s]
+Epoch 8/15 - Train Loss: 0.0136 | Val Loss: 0.0073
+Epoch 9/15 [Train]: 100%|████████████████████████████████████| 1/1 [00:00<00:00,  4.99it/s]
+Epoch 9/15 [Val]: 100%|██████████████████████████████████████| 1/1 [00:00<00:00, 51.69it/s]
+Epoch 9/15 - Train Loss: 0.0137 | Val Loss: 0.0074
+Epoch 10/15 [Train]: 100%|███████████████████████████████████| 1/1 [00:00<00:00,  4.99it/s]
+Epoch 10/15 [Val]: 100%|█████████████████████████████████████| 1/1 [00:00<00:00, 49.54it/s]
+Epoch 10/15 - Train Loss: 0.0138 | Val Loss: 0.0073
+Early stopping triggered after 3 epochs with no improvement.
+Training complete. Best model saved to models/baseline_resnet50_best.pth
