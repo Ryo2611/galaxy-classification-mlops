@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/Users/watanabemuku/Downloads/B4/DL_Basics/2025_Autumn/1st_Lecture/Game_Physics/galaxy_portfolio/src/train.py", line 356, in <module>
+    train(config)
+    ~~~~~^^^^^^^^
+  File "/Users/watanabemuku/Downloads/B4/DL_Basics/2025_Autumn/1st_Lecture/Game_Physics/galaxy_portfolio/src/train.py", line 189, in train
+    from src.models.build_model import GalaxyDataset
+ModuleNotFoundError: No module named 'src'

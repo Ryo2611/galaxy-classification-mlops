@@ -1,0 +1,8 @@
+Total labels in CSV: 61578
+Total JPG images found in directory: 61578
+Dataset mapped size: 61578 images.
+データセット: 61578 サンプル, 37 出力変数
+
+学習開始 (epochs=15, batch_size=32, patience=3)
+============================================================
+Epoch 1/15 [Train]:  44%|████████████████████████████████████████▉                                                    | 677/1540 [15:04<18:17,  1.27s/it]

@@ -1,0 +1,21 @@
+{
+  "os": "macOS-26.3.1-arm64-arm-64bit-Mach-O",
+  "python": "CPython 3.13.5",
+  "startedAt": "2026-04-12T03:43:15.235555Z",
+  "args": [
+    "--config",
+    "configs/default_config.yaml"
+  ],
+  "program": "/Users/watanabemuku/Downloads/B4/DL_Basics/2025_Autumn/1st_Lecture/Game_Physics/galaxy_portfolio/src/train.py",
+  "codePath": "src/train.py",
+  "codePathLocal": "src/train.py",
+  "git": {
+    "remote": "https://github.com/Ryo2611/galaxy-classification-mlops.git",
+    "commit": "2c3962e756d3b6d51db6b386d8700c37fc9861cc"
+  },
+  "email": "wryo7811@gmail.com",
+  "root": "/Users/watanabemuku/Downloads/B4/DL_Basics/2025_Autumn/1st_Lecture/Game_Physics/galaxy_portfolio",
+  "host": "RyonoMacBook-Air.local",
+  "executable": "/Users/watanabemuku/Downloads/B4/DL_Basics/2025_Autumn/1st_Lecture/Game_Physics/galaxy_portfolio/venv/bin/python",
+  "writerId": "aeg8u2u6a29imn95oqu1sreoarb4qlpk"
+}

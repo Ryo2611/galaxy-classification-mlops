@@ -1,0 +1,59 @@
+_wandb:
+    value:
+        cli_version: 0.25.0
+        e:
+            tuzs6z8sysl2dy5wa5k3h7clzs8vcvzq:
+                apple: {}
+                args:
+                    - --csv_path
+                    - labels.csv
+                codePath: src/models/build_model.py
+                codePathLocal: src/models/build_model.py
+                cpu_count: 10
+                cpu_count_logical: 10
+                disk:
+                    /:
+                        total: "494384795648"
+                        used: "411667222528"
+                email: wryo7811@gmail.com
+                executable: /opt/anaconda3/bin/python
+                git:
+                    commit: 2c3962e756d3b6d51db6b386d8700c37fc9861cc
+                    remote: https://github.com/Ryo2611/galaxy-classification-mlops.git
+                host: RyonoMacBook-Air.local
+                memory:
+                    total: "25769803776"
+                os: macOS-26.3.1-arm64-arm-64bit-Mach-O
+                program: /Users/watanabemuku/Downloads/B4/DL_Basics/2025_Autumn/1st_Lecture/Game_Physics/galaxy_portfolio/src/models/build_model.py
+                python: CPython 3.13.5
+                root: /Users/watanabemuku/Downloads/B4/DL_Basics/2025_Autumn/1st_Lecture/Game_Physics/galaxy_portfolio
+                startedAt: "2026-04-03T11:31:10.908726Z"
+                writerId: tuzs6z8sysl2dy5wa5k3h7clzs8vcvzq
+        m: []
+        python_version: 3.13.5
+        t:
+            "1":
+                - 1
+                - 41
+            "2":
+                - 1
+                - 41
+            "3":
+                - 13
+                - 16
+            "4": 3.13.5
+            "5": 0.25.0
+            "12": 0.25.0
+            "13": darwin-arm64
+architecture:
+    value: ResNet-50
+batch_size:
+    value: 32
+epochs:
+    value: 15
+learning_rate:
+    value: 0.001
+loss_function:
+    value: MSE
+optimizer:
+    value: Adam

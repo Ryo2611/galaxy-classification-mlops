@@ -1,0 +1,65 @@
+# =============================================================================
+# Galaxy Classification Portfolio — Default Configuration
+# =============================================================================
+# このファイルはパイプライン全体のハイパーパラメータを一元管理します。
+# src/train.py から読み込まれ、各モジュールに渡されます。
+# CLI引数でオーバーライドすることも可能です。
+
+# ---- データ取得設定 ----
+data:
+  csv_path: "data/external/training_solutions_rev1.csv"  # Galaxy Zoo ラベルCSVへのパス
+  raw_dir: "data/raw"                                     # 生FITSファイルの保存先
+  processed_dir: "data/processed/rgb_images"               # 前処理済みRGB画像の保存先
+  num_samples: 500                                         # ダウンロードするサンプル数 (0=全件)
+  bands: "ugriz"                                           # ダウンロードするSDSSバンド
+
+# ---- 前処理設定 ----
+preprocessing:
+  lupton_Q: 8.0              # Lupton RGB の asinh ソフトニングパラメータ
+  lupton_stretch: 0.5        # Lupton RGB の線形ストレッチパラメータ
+  image_size: 224            # リサイズ先の画像サイズ (正方形)
+  normalize_mean: [0.485, 0.456, 0.406]  # ImageNet 正規化平均
+  normalize_std: [0.229, 0.224, 0.225]   # ImageNet 正規化標準偏差
+
+# ---- モデル設定 ----
+model:
+  architecture: "resnet50"   # バックボーンアーキテクチャ (resnet50 / resnet18 / efficientnet_b0)
+  pretrained: false          # ImageNet事前学習重みを使用するか
+  num_outputs: 37            # 出力次元数 (Galaxy Zoo: Class1.1 〜 Class11.6)
+  dropout: 0.0               # 最終層前のDropout率 (0.0 = なし)
+
+# ---- 学習設定 ----
+training:
+  epochs: 15                 # 最大エポック数
+  batch_size: 32             # バッチサイズ
+  learning_rate: 0.001       # 学習率
+  optimizer: "adam"           # 最適化手法 (adam / sgd / adamw)
+  weight_decay: 0.0          # L2正則化 (AdamW使用時に有効)
+  loss_function: "mse"       # 損失関数 (mse / smooth_l1)
+  patience: 3                # 早期停止の patience（改善なしエポック数）
+  train_ratio: 0.8           # 訓練/検証分割比率
+  num_workers: 0             # DataLoader のワーカー数
+  seed: 42                   # 再現性のための乱数シード
+
+# ---- データ拡張設定 ----
+augmentation:
+  horizontal_flip: true      # ランダム水平反転
+  vertical_flip: true        # ランダム垂直反転
+  random_rotation: 0         # ランダム回転の最大角度 (0 = 無効)
+  color_jitter: false        # 色相・彩度のランダム変更
+
+# ---- Weights & Biases 設定 ----
+wandb:
+  project: "galaxy-classification-portfolio"
+  run_name: "resnet50-baseline"
+  enabled: true              # W&B を有効にするか (false = オフライン学習)
+
+# ---- モデル保存設定 ----
+checkpoint:
+  save_dir: "models"                          # チェックポイントの保存ディレクトリ
+  best_model_name: "baseline_resnet50_best.pth"  # 最良モデルのファイル名
+
+# ---- Grad-CAM / XAI 設定 ----
+xai:
+  target_layer: "layer4"     # Grad-CAM の対象レイヤー
+  output_dir: "data/processed/gradcam"  # Grad-CAM 出力先

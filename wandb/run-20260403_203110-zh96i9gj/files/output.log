@@ -1,0 +1,34 @@
+Using device: mps
+Traceback (most recent call last):
+  File "/Users/watanabemuku/Downloads/B4/DL_Basics/2025_Autumn/1st_Lecture/Game_Physics/galaxy_portfolio/src/models/build_model.py", line 196, in <module>
+    train_baseline(args.csv_path, args.img_dir, args.epochs, args.batch_size, args.patience)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/watanabemuku/Downloads/B4/DL_Basics/2025_Autumn/1st_Lecture/Game_Physics/galaxy_portfolio/src/models/build_model.py", line 98, in train_baseline
+    dataset = GalaxyDataset(csv_file=csv_path, img_dir=img_dir, transform=transform)
+  File "/Users/watanabemuku/Downloads/B4/DL_Basics/2025_Autumn/1st_Lecture/Game_Physics/galaxy_portfolio/src/models/build_model.py", line 23, in __init__
+    self.labels_df = pd.read_csv(csv_file)
+                     ~~~~~~~~~~~^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/pandas/io/parsers/readers.py", line 1026, in read_csv
+    return _read(filepath_or_buffer, kwds)
+  File "/opt/anaconda3/lib/python3.13/site-packages/pandas/io/parsers/readers.py", line 620, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+  File "/opt/anaconda3/lib/python3.13/site-packages/pandas/io/parsers/readers.py", line 1620, in __init__
+    self._engine = self._make_engine(f, self.engine)
+                   ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/pandas/io/parsers/readers.py", line 1880, in _make_engine
+    self.handles = get_handle(
+                   ~~~~~~~~~~^
+        f,
+        ^^
+    ...<6 lines>...
+        storage_options=self.options.get("storage_options", None),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/opt/anaconda3/lib/python3.13/site-packages/pandas/io/common.py", line 873, in get_handle
+    handle = open(
+        handle,
+    ...<3 lines>...
+        newline="",
+    )
+FileNotFoundError: [Errno 2] No such file or directory: 'labels.csv'

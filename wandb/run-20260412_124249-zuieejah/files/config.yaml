@@ -1,0 +1,95 @@
+_wandb:
+    value:
+        cli_version: 0.25.1
+        e:
+            i25tzu2ah90qmmybuy31strdec3cd4ow:
+                args:
+                    - --config
+                    - configs/default_config.yaml
+                codePath: src/train.py
+                codePathLocal: src/train.py
+                email: wryo7811@gmail.com
+                executable: /Users/watanabemuku/Downloads/B4/DL_Basics/2025_Autumn/1st_Lecture/Game_Physics/galaxy_portfolio/venv/bin/python
+                git:
+                    commit: 2c3962e756d3b6d51db6b386d8700c37fc9861cc
+                    remote: https://github.com/Ryo2611/galaxy-classification-mlops.git
+                host: RyonoMacBook-Air.local
+                os: macOS-26.3.1-arm64-arm-64bit-Mach-O
+                program: /Users/watanabemuku/Downloads/B4/DL_Basics/2025_Autumn/1st_Lecture/Game_Physics/galaxy_portfolio/src/train.py
+                python: CPython 3.13.5
+                root: /Users/watanabemuku/Downloads/B4/DL_Basics/2025_Autumn/1st_Lecture/Game_Physics/galaxy_portfolio
+                startedAt: "2026-04-12T03:42:49.519334Z"
+                writerId: i25tzu2ah90qmmybuy31strdec3cd4ow
+        m: []
+        python_version: 3.13.5
+        t:
+            "1":
+                - 1
+                - 41
+            "2":
+                - 1
+                - 41
+            "3":
+                - 13
+                - 16
+            "4": 3.13.5
+            "5": 0.25.1
+            "12": 0.25.1
+            "13": darwin-arm64
+augmentation:
+    value:
+        color_jitter: false
+        horizontal_flip: true
+        random_rotation: 0
+        vertical_flip: true
+checkpoint:
+    value:
+        best_model_name: baseline_resnet50_best.pth
+        save_dir: models
+data:
+    value:
+        bands: ugriz
+        csv_path: data/external/training_solutions_rev1.csv
+        num_samples: 500
+        processed_dir: data/processed/rgb_images
+        raw_dir: data/raw
+model:
+    value:
+        architecture: resnet50
+        dropout: 0
+        num_outputs: 37
+        pretrained: false
+preprocessing:
+    value:
+        image_size: 224
+        lupton_Q: 8
+        lupton_stretch: 0.5
+        normalize_mean:
+            - 0.485
+            - 0.456
+            - 0.406
+        normalize_std:
+            - 0.229
+            - 0.224
+            - 0.225
+training:
+    value:
+        batch_size: 32
+        epochs: 15
+        learning_rate: 0.001
+        loss_function: mse
+        num_workers: 0
+        optimizer: adam
+        patience: 3
+        seed: 42
+        train_ratio: 0.8
+        weight_decay: 0
+wandb:
+    value:
+        enabled: true
+        project: galaxy-classification-portfolio
+        run_name: resnet50-baseline
+xai:
+    value:
+        output_dir: data/processed/gradcam
+        target_layer: layer4
