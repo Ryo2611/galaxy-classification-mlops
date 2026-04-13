@@ -36,13 +36,24 @@ def run_gradcam(image_path, model_path, output_path):
     
     input_tensor = transform(rgb_img).unsqueeze(0)
     
-    # Use a pre-trained ResNet-50 as a placeholder model if none provided
-    # In a real scenario, you'd load your fine-tuned galaxy weights here.
-    model = models.resnet50(pretrained=True)
-    
+    # Build model with the same fc structure used during training (build_model.py)
+    # The trained model uses: fc = nn.Sequential(nn.Linear(2048, 37), nn.Sigmoid())
+    NUM_OUTPUTS = 37
+    model = models.resnet50(weights=None)
+    num_ftrs = model.fc.in_features
+    model.fc = torch.nn.Sequential(
+        torch.nn.Linear(num_ftrs, NUM_OUTPUTS),
+        torch.nn.Sigmoid()
+    )
+
     if model_path and os.path.exists(model_path):
         print(f"Loading custom weights from {model_path}...")
-        model.load_state_dict(torch.load(model_path))
+        device = torch.device("cuda" if torch.cuda.is_available()
+                              else "mps" if torch.backends.mps.is_available()
+                              else "cpu")
+        model.load_state_dict(torch.load(model_path, map_location=device))
+    else:
+        print("Warning: No model weights provided. Using random weights.")
         
     model.eval()
     
