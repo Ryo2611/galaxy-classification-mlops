@@ -50,7 +50,7 @@ augmentation:
 
 # ---- Weights & Biases 設定 ----
 wandb:
-  project: "galaxy-classification-portfolio"
+  project: "galaxy-classification-mlops"
   run_name: "resnet50-baseline"
   enabled: true              # W&B を有効にするか (false = オフライン学習)
 

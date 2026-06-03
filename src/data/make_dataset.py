@@ -15,7 +15,7 @@ warnings.filterwarnings("ignore", category=UserWarning, append=True)
 def parse_args():
     parser = argparse.ArgumentParser(description="Download raw SDSS FITS images.")
     parser.add_argument(
-        "--csv_path", type=str, required=True, help="Path to GalaxyZoo CSV with RA/DEC"
+        "--csv_path", type=str, required=True, help="Path to a galaxy catalog CSV with RA/DEC"
     )
     parser.add_argument(
         "--output_dir", type=str, default="../data/raw", help="Directory to save FITS"
@@ -32,10 +32,39 @@ def parse_args():
         default="ugriz",
         help="SDSS bands to download (e.g., ugriz)",
     )
+    parser.add_argument("--id_col", type=str, default=None, help="Object ID column name")
+    parser.add_argument("--ra_col", type=str, default="RA", help="Right ascension column name")
+    parser.add_argument("--dec_col", type=str, default="DEC", help="Declination column name")
+    parser.add_argument(
+        "--uncertain_col",
+        type=str,
+        default="UNCERTAIN",
+        help="Optional uncertainty flag column name",
+    )
     return parser.parse_args()
 
 
-def download_fits(csv_path: str, output_dir: str, num_samples: int, bands: str):
+def _resolve_id_column(df: pd.DataFrame, id_col: str | None) -> str:
+    if id_col:
+        if id_col not in df.columns:
+            raise ValueError(f"ID column '{id_col}' was not found in the CSV")
+        return id_col
+    for candidate in ("OBJID", "objid", "GalaxyID", "galaxy_id"):
+        if candidate in df.columns:
+            return candidate
+    raise ValueError("No object ID column found. Pass --id_col explicitly.")
+
+
+def download_fits(
+    csv_path: str,
+    output_dir: str,
+    num_samples: int,
+    bands: str,
+    id_col: str | None = None,
+    ra_col: str = "RA",
+    dec_col: str = "DEC",
+    uncertain_col: str = "UNCERTAIN",
+):
     """
     Reads coordinates from GalaxyZoo CSV and downloads raw FITS data from SDSS via astroquery.
     """
@@ -43,12 +72,22 @@ def download_fits(csv_path: str, output_dir: str, num_samples: int, bands: str):
 
     print(f"Loading data from {csv_path}...")
     df = pd.read_csv(csv_path)
+    object_id_col = _resolve_id_column(df, id_col)
+
+    missing_columns = [col for col in (ra_col, dec_col) if col not in df.columns]
+    if missing_columns:
+        raise ValueError(
+            "SDSS FITS download requires sky-coordinate columns. "
+            f"Missing: {missing_columns}. Provide a catalog with RA/DEC or pass "
+            "--ra_col and --dec_col for the correct column names."
+        )
 
     # Optional: Take a random sample or specific subset for quick prototyping
     if num_samples > 0:
-        # Priority to confirmed classes rather than uncertain
-        df = df[df["UNCERTAIN"] == 0]
-        df = df.sample(n=num_samples, random_state=42).reset_index(drop=True)
+        if uncertain_col in df.columns:
+            df = df[df[uncertain_col] == 0]
+        sample_size = min(num_samples, len(df))
+        df = df.sample(n=sample_size, random_state=42).reset_index(drop=True)
 
     print(f"Starting download for {len(df)} galaxies...")
 
@@ -57,9 +96,9 @@ def download_fits(csv_path: str, output_dir: str, num_samples: int, bands: str):
         os.makedirs(os.path.join(output_dir, b), exist_ok=True)
 
     for idx, row in tqdm(df.iterrows(), total=len(df), desc="Downloading FITS"):
-        objid = row["OBJID"]
-        ra = row["RA"]
-        dec = row["DEC"]
+        objid = row[object_id_col]
+        ra = row[ra_col]
+        dec = row[dec_col]
 
         # Parse coordinates (e.g., "00:00:00.41", "-10:22:25.7")
         try:
@@ -93,4 +132,13 @@ def download_fits(csv_path: str, output_dir: str, num_samples: int, bands: str):
 
 if __name__ == "__main__":
     args = parse_args()
-    download_fits(args.csv_path, args.output_dir, args.num_samples, args.bands)
+    download_fits(
+        args.csv_path,
+        args.output_dir,
+        args.num_samples,
+        args.bands,
+        args.id_col,
+        args.ra_col,
+        args.dec_col,
+        args.uncertain_col,
+    )

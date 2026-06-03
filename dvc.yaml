@@ -1,0 +1,48 @@
+stages:
+  dataset_stats:
+    cmd: python src/features/build_features.py --compute_stats --img_dir data/processed/rgb_images --output data/processed/dataset_stats.json
+    deps:
+      - data/processed/rgb_images
+      - src/features/build_features.py
+    outs:
+      - data/processed/dataset_stats.json
+
+  train_resnet18:
+    cmd: python src/training/train.py --config configs/resnet18.yaml --no_wandb
+    deps:
+      - configs/resnet18.yaml
+      - data/external/training_solutions_rev1.csv
+      - data/processed/rgb_images
+      - src/models/resnet.py
+      - src/models/model_factory.py
+      - src/training/train.py
+      - src/training/metrics.py
+    outs:
+      - models/resnet18_baseline_best.pth
+
+  evaluate_resnet18:
+    cmd: python src/training/evaluate.py --config configs/resnet18.yaml --checkpoint models/resnet18_baseline_best.pth
+    deps:
+      - configs/resnet18.yaml
+      - data/external/training_solutions_rev1.csv
+      - data/processed/rgb_images
+      - models/resnet18_baseline_best.pth
+      - src/training/evaluate.py
+      - src/training/metrics.py
+    metrics:
+      - reports/figures/resnet18_metrics.json
+    outs:
+      - reports/resnet18_predictions.csv
+    plots:
+      - reports/figures/prediction_distribution.png
+      - reports/figures/truth_vs_prediction.png
+
+  error_analysis:
+    cmd: python src/training/error_analysis.py --labels data/external/training_solutions_rev1.csv --predictions reports/resnet18_predictions.csv --output reports/error_analysis_summary.json
+    deps:
+      - data/external/training_solutions_rev1.csv
+      - reports/resnet18_predictions.csv
+      - src/training/error_analysis.py
+      - src/training/metrics.py
+    metrics:
+      - reports/error_analysis_summary.json

@@ -11,3 +11,12 @@ torchvision
 grad-cam
 Pillow
 wandb
+pyyaml
+pytest
+fastapi[all]
+streamlit
+requests
+python-multipart
+opencv-python
+ruff
+dvc

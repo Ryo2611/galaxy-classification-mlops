@@ -13,11 +13,6 @@ RUN apt-get update && apt-get install -y \
 
 # Copy requirements and install
 COPY requirements.txt /app/
-# Add web framework dependencies
-RUN echo "fastapi[all]" >> /app/requirements.txt
-RUN echo "streamlit" >> /app/requirements.txt
-RUN echo "requests" >> /app/requirements.txt
-RUN echo "python-multipart" >> /app/requirements.txt
 
 RUN pip install --no-cache-dir -r requirements.txt
 

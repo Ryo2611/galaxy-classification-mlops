@@ -12,7 +12,6 @@ Usage:
 
 import os
 import sys
-import tempfile
 import numpy as np
 import pytest
 from PIL import Image
@@ -170,14 +169,14 @@ class TestProcessFitsToRgb:
 
         assert os.path.exists(output_dir)
 
-    def test_generates_png_files(self, dummy_fits_dir):
-        """PNGファイルが生成されるか"""
+    def test_generates_jpg_files(self, dummy_fits_dir):
+        """JPGファイルが生成されるか"""
         fits_dir, objid = dummy_fits_dir
         output_dir = str(fits_dir / "output_rgb")
 
         process_fits_to_rgb(str(fits_dir), output_dir)
 
-        expected_file = os.path.join(output_dir, f"{objid}.png")
+        expected_file = os.path.join(output_dir, f"{objid}.jpg")
         assert os.path.exists(expected_file), f"出力ファイルが見つからない: {expected_file}"
 
     def test_output_is_valid_rgb_image(self, dummy_fits_dir):
@@ -187,7 +186,7 @@ class TestProcessFitsToRgb:
 
         process_fits_to_rgb(str(fits_dir), output_dir)
 
-        img_path = os.path.join(output_dir, f"{objid}.png")
+        img_path = os.path.join(output_dir, f"{objid}.jpg")
         img = Image.open(img_path)
 
         assert img.mode == "RGB"

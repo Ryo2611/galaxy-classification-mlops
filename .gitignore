@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+.pytest_cache/
+.ipynb_checkpoints/
+
+.DS_Store
+
+wandb/
+
+reports/figures/
+reports/*_predictions.csv
+reports/*_summary.json
+
+data/processed/dummy_gradcam.png
+
+venv/
+.venv/
+
+# DVC tracked files (Huge data and models)
+data/
+models/

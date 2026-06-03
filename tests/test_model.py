@@ -13,7 +13,6 @@ Usage:
 
 import os
 import sys
-import tempfile
 import numpy as np
 import pandas as pd
 import torch
@@ -384,3 +383,107 @@ class TestTrainHelpers:
         config = load_config(str(config_path))
         assert config["training"]["epochs"] == 10
         assert config["training"]["batch_size"] == 16
+
+
+class TestWeek1Baseline:
+    """Week 1 baseline modules のテスト"""
+
+    def test_build_resnet18_baseline(self):
+        """ResNet18 baseline が37次元確率を返すか"""
+        from src.models.resnet import build_resnet18
+
+        model = build_resnet18(num_outputs=37, pretrained=False)
+        model.eval()
+
+        with torch.no_grad():
+            output = model(torch.randn(1, 3, 224, 224))
+
+        assert output.shape == (1, 37)
+        assert torch.all(output >= 0)
+        assert torch.all(output <= 1)
+
+    def test_regression_metrics(self):
+        """RMSE/MAE/class-wise RMSE が計算できるか"""
+        from src.training.metrics import regression_metrics
+
+        y_true = np.array([[0.0, 1.0], [1.0, 0.0]])
+        y_pred = np.array([[0.0, 0.5], [0.5, 0.0]])
+        metrics = regression_metrics(y_true, y_pred, target_names=["a", "b"])
+
+        assert metrics["rmse"] > 0
+        assert metrics["mae"] > 0
+        assert set(metrics["classwise_rmse"]) == {"a", "b"}
+
+    def test_split_indices_is_reproducible(self):
+        """固定seedで同じtrain/validation splitになるか"""
+        from src.training.train import split_indices
+
+        config = {"data": {"train_ratio": 0.8, "num_samples": 0}, "training": {"seed": 42}}
+        first = split_indices(10, config)
+        second = split_indices(10, config)
+
+        assert first == second
+        assert len(first[0]) == 8
+        assert len(first[1]) == 2
+
+
+class TestWeek2Modules:
+    """Week 2 model comparison / error analysis modules のテスト"""
+
+    def test_model_factory_builds_efficientnet(self):
+        """model_factory から EfficientNet-B0 を構築できるか"""
+        from src.models.model_factory import build_model_from_config
+
+        config = {
+            "model": {
+                "name": "efficientnet_b0",
+                "pretrained": False,
+                "dropout": 0.2,
+            }
+        }
+        model = build_model_from_config(config, num_outputs=37)
+
+        assert isinstance(model.classifier[-1], nn.Sigmoid)
+
+    def test_model_factory_rejects_unknown_model(self):
+        """未対応モデル名で ValueError が出るか"""
+        from src.models.model_factory import build_model_from_name
+
+        with pytest.raises(ValueError, match="Unsupported model"):
+            build_model_from_name("unknown_cnn", num_outputs=37)
+
+    def test_gradcam_target_layer_for_resnet(self):
+        """ResNet系のGrad-CAM target layer が取得できるか"""
+        from src.explainability.gradcam import get_target_layers
+        from src.models.resnet import build_resnet18
+
+        model = build_resnet18(num_outputs=37, pretrained=False)
+        layers = get_target_layers(model, "resnet18")
+
+        assert layers == [model.layer4[-1]]
+
+    def test_error_analysis_summary(self, tmp_path):
+        """予測CSVから誤差分析サマリを生成できるか"""
+        from src.training.error_analysis import summarize_errors
+
+        label_path = tmp_path / "labels.csv"
+        pred_path = tmp_path / "predictions.csv"
+        output_path = tmp_path / "summary.json"
+
+        label_df = pd.DataFrame({
+            "GalaxyID": ["1", "2"],
+            "Class1.1": [0.0, 1.0],
+            "Class1.2": [1.0, 0.0],
+        })
+        pred_df = pd.DataFrame({
+            "Class1.1": [0.1, 0.8],
+            "Class1.2": [0.9, 0.2],
+        })
+        label_df.to_csv(label_path, index=False)
+        pred_df.to_csv(pred_path, index=False)
+
+        summary = summarize_errors(str(label_path), str(pred_path), str(output_path))
+
+        assert output_path.exists()
+        assert summary["overall_rmse"] > 0
+        assert len(summary["hardest_samples"]) == 2

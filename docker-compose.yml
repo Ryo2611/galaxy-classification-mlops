@@ -1,25 +1,27 @@
-version: '3.8'
-
 services:
   api:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.api
     container_name: galaxy_api
-    command: uvicorn app.api.main:app --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
     volumes:
-       # Mount models directory for hot-swapping weights without rebuild
-      - ./models:/app/models
+      - ./models:/app/models:ro
     environment:
-      - WANDB_API_KEY=${WANDB_API_KEY} # Securely pass W&B token
+      - MODEL_NAME=resnet50
+      - MODEL_PATH=/app/models/baseline_resnet50_best.pth
 
   frontend:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
     container_name: galaxy_frontend
-    command: streamlit run app/frontend/app.py --server.port 8501 --server.address 0.0.0.0
     ports:
       - "8501:8501"
     depends_on:
       - api
+    volumes:
+      - ./data:/app/data:ro
     environment:
-      - API_URL=http://api:8000/predict/
+      - API_BASE_URL=http://api:8000

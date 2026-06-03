@@ -13,6 +13,7 @@ Usage:
 import os
 import sys
 import argparse
+import random
 import yaml
 import torch
 import torch.nn as nn
@@ -26,10 +27,6 @@ import numpy as np
 _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if _PROJECT_ROOT not in sys.path:
     sys.path.insert(0, _PROJECT_ROOT)
-
-# 再現性のためワーカー間をまたぐシードも固定
-import random
-
 
 def set_seed(seed: int):
     """再現性のための乱数シード固定"""
@@ -197,27 +194,27 @@ def train(config: dict):
     csv_path = config["data"]["csv_path"]
     img_dir = config["data"]["processed_dir"]
 
-    full_dataset = GalaxyDataset(csv_file=csv_path, img_dir=img_dir, transform=train_transform)
+    train_full_dataset = GalaxyDataset(csv_file=csv_path, img_dir=img_dir, transform=train_transform)
+    val_full_dataset = GalaxyDataset(csv_file=csv_path, img_dir=img_dir, transform=val_transform)
 
-    if len(full_dataset) == 0:
+    if len(train_full_dataset) == 0:
         print("エラー: 画像とラベルのペアが見つかりません。データのダウンロード/前処理は完了していますか？")
         return
 
-    num_outputs = len(full_dataset.target_cols)
-    print(f"データセット: {len(full_dataset)} サンプル, {num_outputs} 出力変数")
+    num_outputs = len(train_full_dataset.target_cols)
+    print(f"データセット: {len(train_full_dataset)} サンプル, {num_outputs} 出力変数")
 
     # 訓練/検証分割
     train_ratio = train_cfg.get("train_ratio", 0.8)
-    train_size = int(train_ratio * len(full_dataset))
-    val_size = len(full_dataset) - train_size
+    train_size = int(train_ratio * len(train_full_dataset))
+    val_size = len(train_full_dataset) - train_size
 
-    train_dataset, val_dataset = torch.utils.data.random_split(
-        full_dataset, [train_size, val_size]
+    generator = torch.Generator().manual_seed(train_cfg.get("seed", 42))
+    train_subset, val_subset = torch.utils.data.random_split(
+        range(len(train_full_dataset)), [train_size, val_size], generator=generator
     )
-
-    # 検証用にはデータ拡張なしの変換を使いたいが、
-    # random_split後のSubsetでtransformを切り替えるにはラッパーが必要
-    # 簡易実装としてここではtrain_transformを共用（拡張はランダムなので検証精度への影響は小さい）
+    train_dataset = torch.utils.data.Subset(train_full_dataset, train_subset.indices)
+    val_dataset = torch.utils.data.Subset(val_full_dataset, val_subset.indices)
 
     batch_size = train_cfg.get("batch_size", 32)
     num_workers = train_cfg.get("num_workers", 0)

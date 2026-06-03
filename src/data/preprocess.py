@@ -12,6 +12,13 @@ def parse_args():
     parser.add_argument("--processed_dir", type=str, default="../data/processed/rgb_images/", help="Directory to save RGB images")
     parser.add_argument("--Q", type=float, default=8, help="Asinh softening parameter for Lupton RGB")
     parser.add_argument("--stretch", type=float, default=0.5, help="Linear stretch parameter for Lupton RGB")
+    parser.add_argument(
+        "--output_format",
+        type=str,
+        default="jpg",
+        choices=["jpg", "png"],
+        help="Image format for RGB composites",
+    )
     return parser.parse_args()
 
 def safe_read_fits(file_path):
@@ -50,7 +57,7 @@ def make_rgb_components(raw_dir, objid):
         
     return i_data, r_data, g_data
 
-def process_fits_to_rgb(raw_dir, processed_dir, Q=8, stretch=0.5):
+def process_fits_to_rgb(raw_dir, processed_dir, Q=8, stretch=0.5, output_format="jpg"):
     """
     Pipeline to find all downloaded FITS in the raw directory and convert
     them to high-quality RGB images suitable for CNNs using Lupton mapping.
@@ -85,9 +92,12 @@ def process_fits_to_rgb(raw_dir, processed_dir, Q=8, stretch=0.5):
             # This is significantly better than a simple linear stretch!
             rgb_image = make_lupton_rgb(i_data, r_data, g_data, Q=Q, stretch=stretch)
             
-            # Save as PNG or JPEG
-            out_path = os.path.join(processed_dir, f"{objid}.png")
-            Image.fromarray(rgb_image).save(out_path)
+            out_path = os.path.join(processed_dir, f"{objid}.{output_format}")
+            image = Image.fromarray(rgb_image).convert("RGB")
+            if output_format == "jpg":
+                image.save(out_path, quality=95)
+            else:
+                image.save(out_path)
             processed_count += 1
         except Exception as e:
             print(f"Error creating RGB for {objid}: {e}")
@@ -96,4 +106,10 @@ def process_fits_to_rgb(raw_dir, processed_dir, Q=8, stretch=0.5):
 
 if __name__ == "__main__":
     args = parse_args()
-    process_fits_to_rgb(args.raw_dir, args.processed_dir, args.Q, args.stretch)
+    process_fits_to_rgb(
+        args.raw_dir,
+        args.processed_dir,
+        args.Q,
+        args.stretch,
+        args.output_format,
+    )
