@@ -1,0 +1,37 @@
+# =============================================================================
+# Masked Autoencoder Self-Supervised Pretraining Configuration
+# =============================================================================
+
+data:
+  image_dir: "data/processed/rgb_images"
+  num_samples: 0
+
+model:
+  name: "mae_vit"
+  patch_size: 16
+  embed_dim: 256
+  encoder_depth: 4
+  decoder_depth: 2
+  num_heads: 4
+  mlp_ratio: 4.0
+  mask_ratio: 0.75
+
+preprocessing:
+  image_size: 224
+
+training:
+  epochs: 20
+  batch_size: 32
+  learning_rate: 0.00015
+  weight_decay: 0.05
+  seed: 42
+  num_workers: 0
+
+wandb:
+  enabled: true
+  project: "galaxy-classification-mlops"
+  run_name: "mae-pretrain"
+
+checkpoint:
+  best_model_path: "models/mae_vit_best.pth"
+  encoder_path: "models/mae_vit_encoder.pth"

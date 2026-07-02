@@ -3,7 +3,6 @@ import json
 import os
 import sys
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import torch
@@ -34,6 +33,8 @@ def predict(model, dataloader, device):
 
 
 def save_prediction_distribution(y_true, y_pred, output_path):
+    import matplotlib.pyplot as plt
+
     plt.figure(figsize=(8, 5))
     plt.hist(y_true.flatten(), bins=40, alpha=0.55, label="Ground truth")
     plt.hist(y_pred.flatten(), bins=40, alpha=0.55, label="Prediction")
@@ -47,6 +48,8 @@ def save_prediction_distribution(y_true, y_pred, output_path):
 
 
 def save_truth_vs_prediction(y_true, y_pred, output_path):
+    import matplotlib.pyplot as plt
+
     plt.figure(figsize=(6, 6))
     plt.scatter(y_true.flatten(), y_pred.flatten(), s=4, alpha=0.25)
     plt.plot([0, 1], [0, 1], color="black", linewidth=1)
@@ -61,6 +64,25 @@ def save_truth_vs_prediction(y_true, y_pred, output_path):
 def evaluate(config_path, checkpoint_path=None, output_dir=None):
     with open(config_path, "r") as f:
         config = yaml.safe_load(f)
+
+    if checkpoint_path is None:
+        checkpoint_path = os.path.join(
+            config["checkpoint"]["save_dir"],
+            config["checkpoint"]["best_model_name"],
+        )
+    if not os.path.exists(checkpoint_path):
+        model_name = config["model"].get("name", config["model"].get("architecture", "model"))
+        train_command = f"python src/training/train.py --config {config_path} --no_wandb"
+        existing_checkpoints = sorted(
+            path for path in os.listdir(config["checkpoint"].get("save_dir", "models"))
+            if path.endswith(".pth")
+        ) if os.path.isdir(config["checkpoint"].get("save_dir", "models")) else []
+        existing_text = ", ".join(existing_checkpoints) if existing_checkpoints else "none"
+        raise FileNotFoundError(
+            f"Checkpoint for {model_name} was not found: {checkpoint_path}\n"
+            f"Train it first with:\n  {train_command}\n"
+            f"Existing checkpoints in models/: {existing_text}"
+        )
 
     device = torch.device(
         "cuda" if torch.cuda.is_available()
@@ -85,11 +107,6 @@ def evaluate(config_path, checkpoint_path=None, output_dir=None):
     )
 
     model = build_model_from_config(config, len(dataset.target_cols)).to(device)
-    if checkpoint_path is None:
-        checkpoint_path = os.path.join(
-            config["checkpoint"]["save_dir"],
-            config["checkpoint"]["best_model_name"],
-        )
     model.load_state_dict(torch.load(checkpoint_path, map_location=device))
 
     y_true, y_pred = predict(model, dataloader, device)
@@ -133,4 +150,7 @@ def parse_args():
 
 if __name__ == "__main__":
     args = parse_args()
-    evaluate(args.config, args.checkpoint, args.output_dir)
+    try:
+        evaluate(args.config, args.checkpoint, args.output_dir)
+    except FileNotFoundError as exc:
+        raise SystemExit(str(exc)) from exc

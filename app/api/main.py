@@ -1,10 +1,10 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 
 from app.api.health import get_health
 from app.api.inference import generate_gradcam_base64, predict_image, read_image
-from app.api.model_loader import ModelBundle, load_model
+from app.api.model_loader import ModelBundle, available_models, load_model
 from app.api.schemas import ExplainResponse, HealthResponse, ModelInfoResponse, PredictionResponse
 
 
@@ -30,6 +30,15 @@ def get_model_bundle() -> ModelBundle:
     if model_bundle is None:
         raise HTTPException(status_code=503, detail="Model is not loaded yet.")
     return model_bundle
+
+
+def get_selected_model_bundle(model_name: str | None = None) -> ModelBundle:
+    if model_name is None or model_name == get_model_bundle().model_name:
+        return get_model_bundle()
+    try:
+        return load_model(model_name)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
 async def read_upload_image(file: UploadFile):
@@ -61,24 +70,27 @@ def model_info():
         checkpoint_loaded=bundle.checkpoint_loaded,
         device=str(bundle.device),
         num_outputs=len(bundle.target_cols),
+        available_models=available_models(),
     )
 
 
 @app.post("/predict", response_model=PredictionResponse)
-async def predict(file: UploadFile = File(...)):
+async def predict(file: UploadFile = File(...), model_name: str | None = Form(default=None)):
     image = await read_upload_image(file)
-    return PredictionResponse(**predict_image(image, get_model_bundle()))
+    return PredictionResponse(**predict_image(image, get_selected_model_bundle(model_name)))
 
 
 @app.post("/predict/", response_model=PredictionResponse)
-async def predict_legacy(file: UploadFile = File(...)):
-    return await predict(file)
+async def predict_legacy(file: UploadFile = File(...), model_name: str | None = Form(default=None)):
+    return await predict(file, model_name)
 
 
 @app.post("/predict/explain", response_model=ExplainResponse)
-async def predict_explain(file: UploadFile = File(...)):
+async def predict_explain(file: UploadFile = File(...), model_name: str | None = Form(default=None)):
     image = await read_upload_image(file)
-    bundle = get_model_bundle()
+    bundle = get_selected_model_bundle(model_name)
+    if not bundle.supports_gradcam:
+        raise HTTPException(status_code=400, detail=f"Grad-CAM is not supported for {bundle.model_name}.")
     result = predict_image(image, bundle)
     result["gradcam_png_base64"] = generate_gradcam_base64(image, bundle)
     return ExplainResponse(**result)

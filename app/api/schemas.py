@@ -12,6 +12,7 @@ class ModelInfoResponse(BaseModel):
     checkpoint_loaded: bool
     device: str
     num_outputs: int
+    available_models: list[dict]
 
 
 class PredictionResponse(BaseModel):
@@ -19,6 +20,7 @@ class PredictionResponse(BaseModel):
     top_prediction: str
     inference_time_ms: float
     model_name: str
+    checkpoint_loaded: bool
 
 
 class ExplainResponse(PredictionResponse):

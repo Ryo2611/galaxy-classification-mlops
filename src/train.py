@@ -19,7 +19,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
-from torchvision import models, transforms
+from torchvision import transforms
 from tqdm import tqdm
 import numpy as np
 
@@ -27,6 +27,9 @@ import numpy as np
 _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if _PROJECT_ROOT not in sys.path:
     sys.path.insert(0, _PROJECT_ROOT)
+
+from src.models.model_factory import build_model_from_config as factory_build_model  # noqa: E402
+
 
 def set_seed(seed: int):
     """再現性のための乱数シード固定"""
@@ -79,47 +82,10 @@ def build_transforms(config: dict, is_train: bool = True):
 
 def build_model(config: dict, num_outputs: int):
     """設定に基づいてモデルを構築する"""
-    model_cfg = config["model"]
-    arch = model_cfg.get("architecture", "resnet50")
-    pretrained = model_cfg.get("pretrained", False)
-
-    if arch == "resnet50":
-        weights = "DEFAULT" if pretrained else None
-        model = models.resnet50(weights=weights)
-        num_ftrs = model.fc.in_features
-    elif arch == "resnet18":
-        weights = "DEFAULT" if pretrained else None
-        model = models.resnet18(weights=weights)
-        num_ftrs = model.fc.in_features
-    elif arch == "efficientnet_b0":
-        weights = "DEFAULT" if pretrained else None
-        model = models.efficientnet_b0(weights=weights)
-        num_ftrs = model.classifier[1].in_features
-        # EfficientNet はclassifierが異なるので別途対応
-        model.classifier = nn.Sequential(
-            nn.Dropout(model_cfg.get("dropout", 0.0)),
-            nn.Linear(num_ftrs, num_outputs),
-            nn.Sigmoid(),
-        )
-        return model
-    else:
-        raise ValueError(f"サポートされていないアーキテクチャ: {arch}")
-
-    # ResNet系の最終層を置換
-    dropout = model_cfg.get("dropout", 0.0)
-    if dropout > 0:
-        model.fc = nn.Sequential(
-            nn.Dropout(dropout),
-            nn.Linear(num_ftrs, num_outputs),
-            nn.Sigmoid(),
-        )
-    else:
-        model.fc = nn.Sequential(
-            nn.Linear(num_ftrs, num_outputs),
-            nn.Sigmoid(),
-        )
-
-    return model
+    try:
+        return factory_build_model(config, num_outputs=num_outputs)
+    except ValueError as exc:
+        raise ValueError(f"サポートされていないアーキテクチャ: {exc}") from exc
 
 
 def build_optimizer(model, config: dict):

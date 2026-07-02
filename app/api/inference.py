@@ -44,12 +44,20 @@ def predict_image(image: Image.Image, bundle: ModelBundle) -> dict:
         "top_prediction": top_prediction,
         "inference_time_ms": round(elapsed_ms, 3),
         "model_name": bundle.model_name,
+        "checkpoint_loaded": getattr(bundle, "checkpoint_loaded", False),
     }
 
 
 def generate_gradcam_base64(image: Image.Image, bundle: ModelBundle) -> str:
     input_tensor = IMAGE_TRANSFORM(image).unsqueeze(0).to(bundle.device)
-    target_layers = [bundle.model.layer4[-1]]
+    if bundle.model_name in {"resnet18", "resnet50"}:
+        target_layers = [bundle.model.layer4[-1]]
+    elif bundle.model_name == "efficientnet_b0":
+        target_layers = [bundle.model.features[-1]]
+    elif bundle.model_name == "convnext_tiny":
+        target_layers = [bundle.model.features[-1]]
+    else:
+        raise ValueError(f"Grad-CAM is not supported for {bundle.model_name}.")
 
     cam = GradCAM(model=bundle.model, target_layers=target_layers)
     grayscale_cam = cam(input_tensor=input_tensor, targets=None)[0]

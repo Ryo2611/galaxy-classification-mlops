@@ -1,0 +1,51 @@
+# =============================================================================
+# Vision Transformer B/16 Comparison Configuration
+# =============================================================================
+
+data:
+  csv_path: "data/external/training_solutions_rev1.csv"
+  image_dir: "data/processed/rgb_images"
+  processed_dir: "data/processed/rgb_images"
+  train_ratio: 0.8
+  num_samples: 0
+
+model:
+  name: "vit_b_16"
+  pretrained: false
+  num_outputs: 37
+  dropout: 0.1
+
+preprocessing:
+  image_size: 224
+  normalize_mean: [0.485, 0.456, 0.406]
+  normalize_std: [0.229, 0.224, 0.225]
+
+augmentation:
+  horizontal_flip: true
+  vertical_flip: true
+  random_rotation: 0
+  color_jitter: false
+
+training:
+  epochs: 10
+  batch_size: 16
+  learning_rate: 0.0001
+  optimizer: "adamw"
+  weight_decay: 0.05
+  loss_function: "mse"
+  patience: 3
+  seed: 42
+  num_workers: 0
+
+wandb:
+  enabled: true
+  project: "galaxy-classification-mlops"
+  run_name: "vit-b-16-comparison"
+
+checkpoint:
+  save_dir: "models"
+  best_model_name: "vit_b_16_comparison_best.pth"
+
+evaluation:
+  output_dir: "reports/figures/vit_b_16"
+  prediction_csv: "reports/vit_b_16_predictions.csv"

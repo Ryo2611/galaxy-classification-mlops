@@ -27,6 +27,8 @@ def get_target_layers(model, model_name: str):
         return [model.layer4[-1]]
     if model_name == "efficientnet_b0":
         return [model.features[-1]]
+    if model_name == "convnext_tiny":
+        return [model.features[-1]]
     raise ValueError(f"Grad-CAM target layer is not defined for {model_name}")
 
 

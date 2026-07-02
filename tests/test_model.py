@@ -445,6 +445,57 @@ class TestWeek2Modules:
 
         assert isinstance(model.classifier[-1], nn.Sigmoid)
 
+    def test_model_factory_builds_convnext(self):
+        """model_factory から ConvNeXt-Tiny を構築できるか"""
+        from src.models.model_factory import build_model_from_config
+
+        config = {
+            "model": {
+                "name": "convnext_tiny",
+                "pretrained": False,
+                "dropout": 0.2,
+            },
+            "preprocessing": {"image_size": 224},
+        }
+        model = build_model_from_config(config, num_outputs=37)
+
+        assert isinstance(model.classifier[-1][-1], nn.Sigmoid)
+
+    def test_model_factory_builds_vit(self):
+        """model_factory から ViT-B/16 を構築できるか"""
+        from src.models.model_factory import build_model_from_config
+
+        config = {
+            "model": {
+                "name": "vit_b_16",
+                "pretrained": False,
+                "dropout": 0.1,
+            },
+            "preprocessing": {"image_size": 224},
+        }
+        model = build_model_from_config(config, num_outputs=37)
+
+        assert isinstance(model.heads.head[-1], nn.Sigmoid)
+
+    def test_mae_forward_loss(self):
+        """MAE が画像パッチをマスクして再構成 loss を返すか"""
+        from src.models.mae import MaskedAutoencoderViT
+
+        model = MaskedAutoencoderViT(
+            image_size=32,
+            patch_size=8,
+            embed_dim=32,
+            encoder_depth=1,
+            decoder_depth=1,
+            num_heads=4,
+            mask_ratio=0.5,
+        )
+        loss, pred_patches, mask = model(torch.rand(2, 3, 32, 32))
+
+        assert loss.item() >= 0
+        assert pred_patches.shape == (2, 16, 3 * 8 * 8)
+        assert mask.shape == (2, 16)
+
     def test_model_factory_rejects_unknown_model(self):
         """未対応モデル名で ValueError が出るか"""
         from src.models.model_factory import build_model_from_name
